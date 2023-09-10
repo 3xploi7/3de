@@ -37,7 +37,7 @@ export default async function handler(
             throw new Error("Required parameter `token`");
         }
 
-        var response = await axiosClient.get(`https://dood.yt/pass_md5/${pass_md5}`)
+        var response = await axiosClient.get(`https://dood.pro/pass_md5/${pass_md5}`)
 
         var url = response.data + getUniqueParam(token)
 
