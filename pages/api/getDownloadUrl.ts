@@ -8,7 +8,7 @@ export default async function handler(
     res: NextApiResponse
 ) {
     const getUniqueParam = (token: string) => {
-        for (var a = "", t = "288860ukxv48au3n1wca5c", n = t.length, o = 0; 10 > o; o++)
+        for (var a = "", t = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789", n = t.length, o = 0; 10 > o; o++)
             a += t.charAt(Math.floor(Math.random() * n));
 
         return a + `?token=${token}&expiry=` + Date.now();
@@ -19,7 +19,7 @@ export default async function handler(
             'User-Agent': userAgent,
             'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8',
             'Accept-Language': 'en-US,en;q=0.5',
-            'Referer': 'https://dood.yt',
+            'Referer': 'https://dood.pro',
             'Sec-Fetch-Dest': 'empty',
             'Sec-Fetch-Mode': 'cors',
             'Sec-Fetch-Site': 'same-origin',
