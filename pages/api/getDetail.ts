@@ -25,7 +25,7 @@ export default async function handler(
             'User-Agent': userAgent,
             'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8',
             'Accept-Language': 'en-US,en;q=0.5',
-            'Referer': 'https://dood.yt',
+            'Referer': 'https://dood.pro',
             'Sec-Fetch-Dest': 'empty',
             'Sec-Fetch-Mode': 'cors',
             'Sec-Fetch-Site': 'same-origin',
@@ -44,7 +44,7 @@ export default async function handler(
         console.info(`VideoCode: ${videoCode}`)
         
         try {
-            const response = await axiosClient.get(`https://dood.yt/e/${videoCode}`)
+            const response = await axiosClient.get(`https://dood.pro/e/${videoCode}`)
 
             console.log(`Response: ${response}`)
 
