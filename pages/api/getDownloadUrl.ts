@@ -1,19 +1,23 @@
-import type { NextApiRequest, NextApiResponse } from 'next'
-import axios from 'axios';
-
-const qs = require('qs');
+import { NextApiRequest, NextApiResponse } from 'next';
+import axios, { AxiosError } from 'axios';
+import qs from 'qs';
 
 export default async function handler(
     req: NextApiRequest,
     res: NextApiResponse
 ) {
     const getUniqueParam = (token: string) => {
-        for (var a = "", t = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789", n = t.length, o = 0; 10 > o; o++)
-            a += t.charAt(Math.floor(Math.random() * n));
-
+        const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+        const n = characters.length;
+        let a = '';
+        for (let o = 0; o < 10; o++) {
+            a += characters.charAt(Math.floor(Math.random() * n));
+        }
         return a + `?token=${token}&expiry=` + Date.now();
-    }
-    const userAgent = req.headers['user-agent']
+    };
+
+    const userAgent = req.headers['user-agent'];
+
     const axiosClient = axios.create({
         headers: {
             'User-Agent': userAgent,
@@ -24,25 +28,24 @@ export default async function handler(
             'Sec-Fetch-Mode': 'cors',
             'Sec-Fetch-Site': 'same-origin',
         }
-    })
+    });
 
-    const pass_md5 = req.body.pass_md5
-    const token = req.body.token
+    const pass_md5 = req.body.pass_md5;
+    const token = req.body.token;
 
     try {
-        if (pass_md5 == undefined) {
+        if (pass_md5 === undefined) {
             throw new Error("Required parameter `pass_md5`");
         }
-        if (token == undefined) {
+        if (token === undefined) {
             throw new Error("Required parameter `token`");
         }
 
-        var response = await axiosClient.get(`https://dood.pro/pass_md5/${pass_md5}`)
+        const response = await axiosClient.get(`https://dood.pro/pass_md5/${pass_md5}`);
+        const url = response.data + getUniqueParam(token);
 
-        var url = response.data + getUniqueParam(token)
-
-        var getSizeResponse = await axiosClient.head(url)
-        var sizeFile = getSizeResponse.headers['content-length']
+        const getSizeResponse = await axiosClient.head(url);
+        const sizeFile = getSizeResponse.headers['content-length'];
 
         res.status(200).json({
             result: true,
@@ -50,10 +53,15 @@ export default async function handler(
                 url: url,
                 size: sizeFile
             }
-        })
+        });
 
-    } catch (error: Error | any) {
-        res.status(400).json({ result: false, message: error.message })
+    } catch (error) {
+        if (axios.isAxiosError(error)) {
+            // Handle Axios-specific errors
+            res.status(400).json({ result: false, message: error.response?.data || error.message });
+        } else {
+            // Handle other errors
+            res.status(400).json({ result: false, message: error.message });
+        }
     }
-
 }
